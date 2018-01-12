@@ -1,4 +1,4 @@
-const graphql = require("graphql")
+const graphql = require('graphql')
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -7,10 +7,10 @@ const {
   GraphQLList,
   GraphQLNonNull
 } = graphql
-const axios = require("axios")
+const axios = require('axios')
 
 const CompanyType = new GraphQLObjectType({
-  name: "Company",
+  name: 'Company',
   fields: () => ({
     id: { type: GraphQLString },
     name: { type: GraphQLString },
@@ -27,7 +27,7 @@ const CompanyType = new GraphQLObjectType({
 })
 
 const UserType = new GraphQLObjectType({
-  name: "User",
+  name: 'User',
   fields: () => ({
     id: { type: GraphQLString },
     firstName: { type: GraphQLString },
@@ -44,7 +44,7 @@ const UserType = new GraphQLObjectType({
 })
 
 const RootQuery = new GraphQLObjectType({
-  name: "RootQueryType",
+  name: 'RootQueryType',
   fields: {
     user: {
       type: UserType,
@@ -63,12 +63,18 @@ const RootQuery = new GraphQLObjectType({
           .get(`http://localhost:3000/companies/${args.id}`)
           .then(res => res.data)
       }
+    },
+    users: {
+      type: new GraphQLList(UserType),
+      resolve() {
+        return axios.get(`http://localhost:3000/users`).then(res => res.data)
+      }
     }
   }
 })
 
 const mutation = new GraphQLObjectType({
-  name: "Mutation",
+  name: 'Mutation',
   fields: {
     addUser: {
       type: UserType,
